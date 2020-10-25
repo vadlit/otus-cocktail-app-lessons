@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cocktail/core/models.dart';
 import 'package:cocktail/ui/widgets/common/future_builder_wrapper.dart';
-import 'package:cocktail/ui/widgets/search/view_model/selected_category_provider.dart';
+import 'package:cocktail/ui/widgets/search/view_model/selected_category_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,44 +20,27 @@ class ResultsGrid extends StatefulWidget {
 }
 
 class _State extends State<ResultsGrid> {
-  StreamSubscription<CocktailCategory> selectedCategoryUpdates;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedCategoryUpdates =
-        SelectedCategoryProvider().updatesStream().listen((selectedCategory) {
-      setState(() {
-        // do nothing, just update
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    selectedCategoryUpdates.cancel();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilderWrapper(
-        future: fetchCocktailsByCategory(),
-        inProgressBuilder: (BuildContext context) {
-          return _InProgressWidget();
-        },
-        onErrorBuilder: (BuildContext context, Object error) {
-          return _ErrorWidget(error.toString());
-        },
-        onDataBuilder:
-            (BuildContext context, Iterable<CocktailDefinition> data) {
-          return _TilesWidget(data);
-        });
+    return AnimatedBuilder(
+        animation: SelectedCategoryNotifier(),
+        builder: (_, __) => FutureBuilderWrapper(
+            future: fetchCocktailsByCategory(),
+            inProgressBuilder: (BuildContext context) {
+              return _InProgressWidget();
+            },
+            onErrorBuilder: (BuildContext context, Object error) {
+              return _ErrorWidget(error.toString());
+            },
+            onDataBuilder:
+                (BuildContext context, Iterable<CocktailDefinition> data) {
+              return _TilesWidget(data);
+            }));
   }
 
   Future<Iterable<CocktailDefinition>> fetchCocktailsByCategory() {
     return AsyncCocktailRepository()
-        .fetchCocktailsByCocktailCategory(SelectedCategoryProvider().category);
+        .fetchCocktailsByCocktailCategory(SelectedCategoryNotifier().category);
   }
 }
 

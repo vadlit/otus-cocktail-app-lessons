@@ -1,7 +1,5 @@
-import 'dart:async';
-
 import 'package:cocktail/core/models.dart';
-import 'package:cocktail/ui/widgets/search/view_model/selected_category_provider.dart';
+import 'package:cocktail/ui/widgets/search/view_model/selected_category_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -18,22 +16,12 @@ class CategoryBubble extends StatefulWidget {
 }
 
 class _State extends State<CategoryBubble> {
-  ValueNotifier<bool> _isSelectedNotifier;
   final CocktailCategory _category;
-  StreamSubscription<CocktailCategory> _selectedCategoryUpdates;
 
-  _State(this._category) {
-    _isSelectedNotifier = ValueNotifier(SelectedCategoryProvider().category == _category);
-    _selectedCategoryUpdates =
-        SelectedCategoryProvider().updatesStream().listen((selectedCategory) {
-      _isSelectedNotifier.value = selectedCategory == _category;
-    });
-  }
+  _State(this._category);
 
   @override
   void dispose() {
-    _selectedCategoryUpdates.cancel();
-    _isSelectedNotifier.dispose();
     super.dispose();
   }
 
@@ -41,11 +29,11 @@ class _State extends State<CategoryBubble> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          SelectedCategoryProvider().category = _category;
+          SelectedCategoryNotifier().category = _category;
         },
-        child: ValueListenableBuilder(
-            valueListenable: _isSelectedNotifier,
-            builder: (_, isSelected, __) => Container(
+        child: AnimatedBuilder(
+            animation: SelectedCategoryNotifier(),
+            builder: (_, __) => Container(
                 padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
                 margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                 decoration: BoxDecoration(
@@ -60,5 +48,5 @@ class _State extends State<CategoryBubble> {
                     style: Theme.of(context).textTheme.subtitle2))));
   }
 
-  bool get isSelected => SelectedCategoryProvider().category == _category;
+  bool get isSelected => SelectedCategoryNotifier().category == _category;
 }
