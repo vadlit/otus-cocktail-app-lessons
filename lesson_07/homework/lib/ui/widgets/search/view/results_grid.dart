@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'package:cocktail/core/models.dart';
 import 'package:cocktail/ui/widgets/common/future_builder_wrapper.dart';
+import 'package:cocktail/ui/widgets/common/infinite_progress_bar_widget.dart';
 import 'package:cocktail/ui/widgets/search/view_model/selected_category_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../assets.dart';
 import 'cocktail_tile.dart';
 
 class ResultsGrid extends StatefulWidget {
@@ -39,30 +38,76 @@ class _State extends State<ResultsGrid> {
   }
 
   Future<Iterable<CocktailDefinition>> fetchCocktailsByCategory() {
-    return AsyncCocktailRepository()
-        .fetchCocktailsByCocktailCategory(SelectedCategoryNotifier().category);
+    return Future.delayed(
+        Duration(seconds: 2), //stub
+        () => AsyncCocktailRepository().fetchCocktailsByCocktailCategory(
+            SelectedCategoryNotifier().category));
   }
 }
 
-class _InProgressWidget extends StatelessWidget {
+class _InProgressWidget extends StatefulWidget {
   const _InProgressWidget({
     Key key,
   }) : super(key: key);
 
   @override
+  _InProgressWidgetState createState() => _InProgressWidgetState();
+}
+
+class _InProgressWidgetState extends State<_InProgressWidget>
+    with SingleTickerProviderStateMixin {
+  double waveRadius = 0.0;
+  final double waveGap = 5.0;
+  Animation<double> _animation;
+  AnimationController _progressController;
+
+  @override
+  void initState() {
+    super.initState();
+    _progressController = AnimationController(
+        duration: Duration(milliseconds: 1500), vsync: this);
+
+    _progressController.forward();
+
+    _progressController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _progressController.reset();
+      } else if (status == AnimationStatus.dismissed) {
+        _progressController.forward();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _progressController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _animation = Tween(begin: 0.0, end: waveGap).animate(_progressController)
+      ..addListener(() {
+        setState(() {
+          waveRadius = _animation.value;
+        });
+      });
+
     return SliverFillRemaining(
-        child: Container(
-      alignment: Alignment.center,
+        child: Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SvgPicture.asset(Assets.searchIcon,
-              color: Theme.of(context).textTheme.headline6.color, width: 36),
+          CustomPaint(
+            size: Size(36, 36),
+            painter: InfiniteProgressBarWidget(
+                color: Theme.of(context).textTheme.headline6.color,
+                waveRadius: waveRadius),
+          ),
           Container(
-            margin: const EdgeInsets.fromLTRB(0, 14, 0, 0),
-            child:
-                Text("Поиск...", style: Theme.of(context).textTheme.headline6),
+            margin: const EdgeInsets.fromLTRB(0, 24, 0, 0),
+            child: Text("Поиск...",
+                style: Theme.of(context).textTheme.headline6),
           ),
         ],
       ),

@@ -32,6 +32,9 @@ class FutureBuilderWrapper<T> extends StatelessWidget {
       initialData: initialData,
       future: future,
       builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return inProgressBuilder(context);
+        }
         if (snapshot.hasError) {
           return onErrorBuilder(context, snapshot.error);
         } else if (snapshot.hasData) {
