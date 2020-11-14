@@ -5,3 +5,5 @@
 
 # screenshots
 https://1drv.ms/u/s!At421hjrHR2akfxvNAHg0d3AveiSiQ?e=XCtXcG
+
+Видео анимации fav-кнопки - https://screencast-o-matic.com/watch/cYX2q3M8Tv
