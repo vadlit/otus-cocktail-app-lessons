@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:homework/models/models.dart';
-import 'package:homework/views/common/animated_svg_widget.dart';
 import '../../../widgets/shadowed_text.dart';
 import '../../../widgets/bubble.dart';
 
@@ -70,24 +69,40 @@ class _DetailsTitleState extends State<DetailsTitle>
 
   @override
   Widget build(BuildContext context) {
-    final Animation favAnimation = CurvedAnimation(parent: _favController, curve: Curves.easeOutCubic);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          widget.cocktail.name,
-          style: TextStyle(
-              color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
-        ),
-        AnimatedSvgWidget(
-          controller: Tween<double>(begin: 0, end: 1).animate(favAnimation),
-          builder: (ctx) => SvgPicture.asset("./assets/fav.svg",
-              color: widget.cocktail.isFavourite
-                  ? Colors.white
-                  : Color.fromARGB(255, 132, 131, 150),
-              width: 20),
-        )
-      ],
+    final Animation favAnimation =
+        CurvedAnimation(parent: _favController, curve: Curves.easeOutCubic);
+    final Widget favIcon = SvgPicture.asset("./assets/fav.svg",
+        color: widget.cocktail.isFavourite
+            ? Colors.white
+            : Color.fromARGB(255, 132, 131, 150),
+        width: 20);
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Text(
+        widget.cocktail.name,
+        style: TextStyle(
+            color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
+      ),
+      _IncreasingWidget(
+          animation: Tween<double>(begin: 0, end: 1).animate(favAnimation),
+          builder: (ctx) => favIcon)
+    ]);
+  }
+}
+
+class _IncreasingWidget extends AnimatedWidget {
+  final WidgetBuilder builder;
+
+  const _IncreasingWidget(
+      {Key key, @required Animation<double> animation, @required this.builder})
+      : super(key: key, listenable: animation);
+
+  Animation<double> get _progress => listenable;
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.scale(
+      scale: (1 + _progress.value),
+      child: builder(context),
     );
   }
 }
