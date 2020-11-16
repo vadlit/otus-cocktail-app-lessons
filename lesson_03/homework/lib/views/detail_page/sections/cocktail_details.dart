@@ -36,30 +36,73 @@ class CocktailDetails extends StatelessWidget {
   }
 }
 
-class DetailsTitle extends StatelessWidget {
+class DetailsTitle extends StatefulWidget {
   const DetailsTitle(
-      this.cocktail, {
-        Key key,
-      }) : super(key: key);
+    this.cocktail, {
+    Key key,
+  }) : super(key: key);
 
   final Cocktail cocktail;
 
   @override
+  _DetailsTitleState createState() => _DetailsTitleState();
+}
+
+class _DetailsTitleState extends State<DetailsTitle>
+    with TickerProviderStateMixin {
+  AnimationController _favController;
+
+  @override
+  void initState() {
+    super.initState();
+    _favController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _favController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          cocktail.name,
-          style: TextStyle(
-              color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
-        ),
-        SvgPicture.asset(
-            "./assets/fav.svg",
-            color: cocktail.isFavourite ? Colors.white : Color.fromARGB(255, 132, 131, 150),
-            width: 20
-        )
-      ],
+    final Animation favAnimation =
+        CurvedAnimation(parent: _favController, curve: Curves.easeOutCubic);
+    final Widget favIcon = SvgPicture.asset("./assets/fav.svg",
+        color: widget.cocktail.isFavourite
+            ? Colors.white
+            : Color.fromARGB(255, 132, 131, 150),
+        width: 20);
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Text(
+        widget.cocktail.name,
+        style: TextStyle(
+            color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
+      ),
+      _IncreasingWidget(
+          animation: Tween<double>(begin: 0, end: 1).animate(favAnimation),
+          builder: (ctx) => favIcon)
+    ]);
+  }
+}
+
+class _IncreasingWidget extends AnimatedWidget {
+  final WidgetBuilder builder;
+
+  const _IncreasingWidget(
+      {Key key, @required Animation<double> animation, @required this.builder})
+      : super(key: key, listenable: animation);
+
+  Animation<double> get _progress => listenable;
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.scale(
+      scale: (1 + _progress.value),
+      child: builder(context),
     );
   }
 }
@@ -68,9 +111,9 @@ class DetailsSubtitle extends StatelessWidget {
   final String caption;
 
   const DetailsSubtitle(
-      this.caption, {
-        Key key,
-      }) : super(key: key);
+    this.caption, {
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
