@@ -3,12 +3,12 @@ import 'package:flutter/widgets.dart';
 
 import 'dart:math' as math;
 
-class InfiniteProgressBarWidget extends CustomPainter {
+class InfiniteProgressBarPainter extends CustomPainter {
   final Color color;
   final double waveRadius;
   Paint wavePaint;
 
-  InfiniteProgressBarWidget({@required this.color, @required this.waveRadius}) {
+  InfiniteProgressBarPainter({@required this.color, @required this.waveRadius}) {
     wavePaint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
@@ -19,17 +19,18 @@ class InfiniteProgressBarWidget extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     double centerX = size.width / 2.0;
     double centerY = size.height / 2.0;
+    final _center = Offset(centerX, centerY);
     double maxRadius = _hypot(centerX, centerY);
 
     var currentRadius = waveRadius;
     while (currentRadius < maxRadius) {
-      canvas.drawCircle(Offset(centerX, centerY), currentRadius, wavePaint);
+      canvas.drawCircle(_center, currentRadius, wavePaint);
       currentRadius += 5.0;
     }
   }
 
   @override
-  bool shouldRepaint(InfiniteProgressBarWidget oldDelegate) {
+  bool shouldRepaint(InfiniteProgressBarPainter oldDelegate) {
     return oldDelegate.waveRadius != waveRadius;
   }
 

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cocktail/core/models.dart';
 import 'package:cocktail/ui/widgets/common/future_builder_wrapper.dart';
-import 'package:cocktail/ui/widgets/common/infinite_progress_bar_widget.dart';
+import 'package:cocktail/ui/widgets/common/infinite_progress_bar_painter.dart';
 import 'package:cocktail/ui/widgets/search/view_model/selected_category_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -98,12 +98,7 @@ class _InProgressWidgetState extends State<_InProgressWidget>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CustomPaint(
-            size: Size(36, 36),
-            painter: InfiniteProgressBarWidget(
-                color: Theme.of(context).textTheme.headline6.color,
-                waveRadius: waveRadius),
-          ),
+          _ProgressBarWidget(waveRadius: waveRadius),
           Container(
             margin: const EdgeInsets.fromLTRB(0, 24, 0, 0),
             child: Text("Поиск...",
@@ -112,6 +107,25 @@ class _InProgressWidgetState extends State<_InProgressWidget>
         ],
       ),
     ));
+  }
+}
+
+class _ProgressBarWidget extends StatelessWidget {
+  const _ProgressBarWidget({
+    Key key,
+    @required this.waveRadius,
+  }) : super(key: key);
+
+  final double waveRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: Size(36, 36),
+      painter: InfiniteProgressBarPainter(
+          color: Theme.of(context).textTheme.headline6.color,
+          waveRadius: waveRadius),
+    );
   }
 }
 
