@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:homework/core/models.dart';
 import 'package:homework/core/src/repository/async_cocktail_repository.dart';
+import 'package:homework/ui/views/detail_page/coctail_detail_page.dart';
 
+import '../core/models.dart';
 import 'cocktail_grid_item.dart';
-
 
 //todo по нажатию на CocktailGridItem открыть CocktailDetailsScreen
 
@@ -41,12 +42,26 @@ class FavouriteCocktailsScreen extends StatelessWidget {
                   mainAxisSpacing: 6,
                   crossAxisCount: 2),
               itemBuilder: (ctx, index) {
-                return CocktailGridItem(snapshot.data.elementAt(index));
+                final cocktailDefinition = snapshot.data.elementAt(index);
+                return MaterialButton(
+                    onPressed: () {
+                      _openCocktail(context, cocktailDefinition);
+                    },
+                    padding: EdgeInsets.zero,
+                    child: CocktailGridItem(cocktailDefinition));
               },
               itemCount: snapshot.data.length);
         }
         return const SizedBox();
       },
     );
+  }
+
+  void _openCocktail(
+      BuildContext context, CocktailDefinition cocktailDefinition) async {
+    final cocktail = await AsyncCocktailRepository()
+        .fetchCocktailDetails(cocktailDefinition.id);
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => CocktailDetailPage(cocktail)));
   }
 }
