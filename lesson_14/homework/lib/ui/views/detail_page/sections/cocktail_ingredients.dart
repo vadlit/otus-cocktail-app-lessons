@@ -23,7 +23,7 @@ class CocktailIngredients extends StatelessWidget {
           Container(
             child: Table(
               children: cocktail.ingredients
-                  .map((i) => _buildIngredient(name: i.ingredientName, count: i.measure))
+                  .map((i) => _buildIngredient(name: i.ingredientName, count: i.measure ?? ""))
                   .toList(),
             ),
           )

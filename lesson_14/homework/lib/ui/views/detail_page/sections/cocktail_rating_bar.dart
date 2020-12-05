@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:homework/core/models.dart';
 
 class CocktailRatingBar extends StatelessWidget {
   const CocktailRatingBar({
     Key key,
-    @required this.cocktail,
     @required this.rating,
   }) : super(key: key);
 
-  final Cocktail cocktail;
   final int rating;
 
   @override

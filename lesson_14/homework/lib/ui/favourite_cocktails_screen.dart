@@ -58,10 +58,8 @@ class FavouriteCocktailsScreen extends StatelessWidget {
   }
 
   void _openCocktail(
-      BuildContext context, CocktailDefinition cocktailDefinition) async {
-    final cocktail = await AsyncCocktailRepository()
-        .fetchCocktailDetails(cocktailDefinition.id);
+      BuildContext context, CocktailDefinition cocktailDefinition) {
     Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => CocktailDetailPage(cocktail)));
+        MaterialPageRoute(builder: (context) => CocktailDetailPage(cocktailDefinition)));
   }
 }

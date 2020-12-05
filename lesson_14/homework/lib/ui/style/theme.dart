@@ -20,3 +20,7 @@ final mainTextTheme = TextTheme(
         color: Colors.white, fontWeight: FontWeight.normal, fontSize: 15),
     bodyText2: TextStyle(
         color: Colors.white, fontSize: 14, fontWeight: FontWeight.normal));
+
+final detailsBgColor = const Color.fromARGB(255, 26, 25, 39);
+
+const double detailsHorizontalPadding = 32;

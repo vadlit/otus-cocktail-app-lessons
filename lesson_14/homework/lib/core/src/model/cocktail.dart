@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import 'cocktail_main_info.dart';
 import 'cocktail_category.dart';
 import 'cocktail_type.dart';
 import 'glass_type.dart';
@@ -67,7 +68,7 @@ import 'ingredient_definition.dart';
 ///        }
 ///  ```
 ///
-class Cocktail {
+class Cocktail implements CocktailMainInfo {
   final String id;
   final String name;
   final String instruction;

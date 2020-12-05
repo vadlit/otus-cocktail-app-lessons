@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import 'cocktail_main_info.dart';
+
 ///
 /// Cocktail Model Definition based on response from
 /// curl curl https://the-cocktail-db.p.rapidapi.com/filter.php\?a\=Alcoholic|jora -p
@@ -16,7 +18,7 @@ import 'package:flutter/foundation.dart';
 ///   "idDrink": "15328"
 ///   }
 ///
-class CocktailDefinition {
+class CocktailDefinition implements CocktailMainInfo {
   final String id;
   final String name;
   final String drinkThumbUrl;

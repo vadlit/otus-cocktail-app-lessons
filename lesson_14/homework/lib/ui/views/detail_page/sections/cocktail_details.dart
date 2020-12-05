@@ -1,35 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:homework/core/models.dart';
+import 'package:homework/core/src/model/cocktail_main_info.dart';
+import '../../../style/theme.dart';
 import '../../../widgets/shadowed_text.dart';
-import '../../../widgets/bubble.dart';
 
 class CocktailDetails extends StatelessWidget {
   const CocktailDetails({
     Key key,
-    @required this.cocktail,
+    @required this.cocktailMainInfo,
   }) : super(key: key);
 
-  final Cocktail cocktail;
+  final CocktailMainInfo cocktailMainInfo;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topLeft,
-      padding: const EdgeInsets.fromLTRB(32, 33, 32, 0),
-      color: Color.fromARGB(255, 26, 25, 39),
+      padding: const EdgeInsets.fromLTRB(detailsHorizontalPadding, 33, detailsHorizontalPadding, 0),
+      color: detailsBgColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DetailsTitle(cocktail),
-          ShadowedText(cocktail.id),
-          DetailsSubtitle("Категория коктейля"),
-          Bubble(cocktail.category.name),
-          DetailsSubtitle("Тип коктейля"),
-          Bubble(cocktail.cocktailType.name),
-          DetailsSubtitle("Тип стекла"),
-          Bubble(cocktail.glassType.name),
+          DetailsTitle(cocktailMainInfo),
+          ShadowedText(cocktailMainInfo.id),
         ],
       ),
     );
@@ -42,7 +36,7 @@ class DetailsTitle extends StatelessWidget {
         Key key,
       }) : super(key: key);
 
-  final Cocktail cocktail;
+  final CocktailMainInfo cocktail;
 
   @override
   Widget build(BuildContext context) {
@@ -60,29 +54,6 @@ class DetailsTitle extends StatelessWidget {
             width: 20
         )
       ],
-    );
-  }
-}
-
-class DetailsSubtitle extends StatelessWidget {
-  final String caption;
-
-  const DetailsSubtitle(
-      this.caption, {
-        Key key,
-      }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(0, 10, 0, 8),
-      child: Text(
-        caption,
-        style: TextStyle(
-            color: Color.fromARGB(255, 234, 234, 234),
-            fontSize: 14,
-            fontWeight: FontWeight.w400),
-      ),
     );
   }
 }

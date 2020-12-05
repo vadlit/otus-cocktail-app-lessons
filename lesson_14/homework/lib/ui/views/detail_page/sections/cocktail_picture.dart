@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:homework/core/models.dart';
+import 'package:homework/core/src/model/cocktail_main_info.dart';
 
 class CocktailPicture extends StatelessWidget {
   const CocktailPicture({
@@ -9,7 +9,7 @@ class CocktailPicture extends StatelessWidget {
     @required this.cocktail,
   }) : super(key: key);
 
-  final Cocktail cocktail;
+  final CocktailMainInfo cocktail;
 
   @override
   Widget build(BuildContext context) {
